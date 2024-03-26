@@ -18,13 +18,34 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react'],
-  rules: {
-    'react/react-in-jsx-scope': 'off', // import Reactの記述を強制にしない
-  },
   settings: {
     react: {
       version: 'detect', // Reactのバージョンを明記（この場合自動検出する）
     },
+  },
+  plugins: ['react', 'import', 'unused-imports'],
+  rules: {
+    'react/react-in-jsx-scope': 'off', // import Reactの記述を強制にしない
+    'unused-imports/no-unused-imports': 'error', // 利用していないimportを削除する
+    'import/order': [
+      // importの順番を整列
+      'warn',
+      {
+        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+        'newlines-between': 'never', // 要素ごとに余白を設けない
+        alphabetize: { order: 'asc' },
+        pathGroupsExcludedImportTypes: ['react'],
+        pathGroups: [
+          { pattern: 'react', group: 'builtin', position: 'before' },
+          { pattern: 'react*', group: 'builtin', position: 'before' },
+          {
+            pattern: '{.,..}/**/*.scss',
+            group: 'index',
+            position: 'after',
+          },
+        ],
+        warnOnUnassignedImports: true, // scss importで順序が間違っている場合警告を出す
+      },
+    ],
   },
 };
