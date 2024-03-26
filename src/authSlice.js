@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
 import { Cookies } from 'react-cookie';
+import { createSlice } from '@reduxjs/toolkit';
 
 const cookie = new Cookies();
 
