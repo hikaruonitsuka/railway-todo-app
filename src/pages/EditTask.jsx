@@ -1,28 +1,45 @@
 import React, { useEffect, useState } from 'react';
-import { Header } from '../components/Header';
-import axios from 'axios';
 import { useCookies } from 'react-cookie';
-import { url } from '../const';
 import { useNavigate, useParams } from 'react-router-dom';
-import './editTask.scss';
+import axios from 'axios';
+import Inner from '../components/Inner';
+import Layout from '../components/Layout';
+import { url } from '../config';
+import { extractDateTime } from '../utils/extractDateTime';
+import { formatDate } from '../utils/formatDate';
+import { formatTime } from '../utils/formatTime';
+import '../styles/editTask.scss';
 
 export const EditTask = () => {
   const navigate = useNavigate();
   const { listId, taskId } = useParams();
   const [cookies] = useCookies();
+
+  // state
   const [title, setTitle] = useState('');
   const [detail, setDetail] = useState('');
   const [isDone, setIsDone] = useState();
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  // イベントハンドラ
   const handleTitleChange = (e) => setTitle(e.target.value);
   const handleDetailChange = (e) => setDetail(e.target.value);
   const handleIsDoneChange = (e) => setIsDone(e.target.value === 'done');
+  const handleDateChange = (e) => setDate(e.target.value);
+  const handleTimeChange = (e) => setTime(e.target.value);
+
+  // タスクの更新
   const onUpdateTask = () => {
-    console.log(isDone);
+    const { year, month, day, hour, minute } = extractDateTime(date, time);
+    const dateObject = new Date(year, month, day, hour, minute);
+
     const data = {
       title: title,
       detail: detail,
       done: isDone,
+      limit: dateObject,
     };
 
     axios
@@ -31,8 +48,7 @@ export const EditTask = () => {
           authorization: `Bearer ${cookies.token}`,
         },
       })
-      .then((res) => {
-        console.log(res.data);
+      .then(() => {
         navigate('/');
       })
       .catch((err) => {
@@ -40,6 +56,7 @@ export const EditTask = () => {
       });
   };
 
+  // タスクの削除
   const onDeleteTask = () => {
     axios
       .delete(`${url}/lists/${listId}/tasks/${taskId}`, {
@@ -55,6 +72,7 @@ export const EditTask = () => {
       });
   };
 
+  // 登録されているデータの取得
   useEffect(() => {
     axios
       .get(`${url}/lists/${listId}/tasks/${taskId}`, {
@@ -66,6 +84,8 @@ export const EditTask = () => {
         const task = res.data;
         setTitle(task.title);
         setDetail(task.detail);
+        setDate(formatDate(task.limit));
+        setTime(formatTime(task.limit));
         setIsDone(task.done);
       })
       .catch((err) => {
@@ -74,48 +94,56 @@ export const EditTask = () => {
   }, []);
 
   return (
-    <div>
-      <Header />
-      <main className="edit-task">
-        <h2>タスク編集</h2>
-        <p className="error-message">{errorMessage}</p>
-        <form className="edit-task-form">
-          <label>タイトル</label>
-          <br />
-          <input type="text" onChange={handleTitleChange} className="edit-task-title" value={title} />
-          <br />
-          <label>詳細</label>
-          <br />
-          <textarea type="text" onChange={handleDetailChange} className="edit-task-detail" value={detail} />
-          <br />
-          <div>
-            <input
-              type="radio"
-              id="todo"
-              name="status"
-              value="todo"
-              onChange={handleIsDoneChange}
-              checked={isDone === false ? 'checked' : ''}
-            />
-            未完了
-            <input
-              type="radio"
-              id="done"
-              name="status"
-              value="done"
-              onChange={handleIsDoneChange}
-              checked={isDone === true ? 'checked' : ''}
-            />
-            完了
-          </div>
-          <button type="button" className="delete-task-button" onClick={onDeleteTask}>
-            削除
-          </button>
-          <button type="button" className="edit-task-button" onClick={onUpdateTask}>
-            更新
-          </button>
-        </form>
-      </main>
-    </div>
+    <Layout>
+      <Inner>
+        <div>
+          <main className="edit-task">
+            <h2>タスク編集</h2>
+            <p className="error-message">{errorMessage}</p>
+            <form className="edit-task-form">
+              <label>タイトル</label>
+              <br />
+              <input type="text" onChange={handleTitleChange} className="edit-task-title" value={title} />
+              <br />
+              <label>詳細</label>
+              <br />
+              <textarea type="text" onChange={handleDetailChange} className="edit-task-detail" value={detail} />
+              <br />
+              <label>期限</label>
+              <div className="edit-task-datetime-input">
+                <input type="date" value={date} onChange={handleDateChange} />
+                <input type="time" value={time} onChange={handleTimeChange} />
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  id="todo"
+                  name="status"
+                  value="todo"
+                  onChange={handleIsDoneChange}
+                  checked={isDone === false ? 'checked' : ''}
+                />
+                未完了
+                <input
+                  type="radio"
+                  id="done"
+                  name="status"
+                  value="done"
+                  onChange={handleIsDoneChange}
+                  checked={isDone === true ? 'checked' : ''}
+                />
+                完了
+              </div>
+              <button type="button" className="delete-task-button" onClick={onDeleteTask}>
+                削除
+              </button>
+              <button type="button" className="edit-task-button" onClick={onUpdateTask}>
+                更新
+              </button>
+            </form>
+          </main>
+        </div>
+      </Inner>
+    </Layout>
   );
 };

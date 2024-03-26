@@ -1,12 +1,13 @@
-import axios from 'axios';
 import React, { useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Navigate } from 'react-router-dom';
+import axios from 'axios';
 import { signIn } from '../authSlice';
-import { Header } from '../components/Header';
-import { url } from '../const';
-import './signUp.scss';
+import Inner from '../components/Inner';
+import Layout from '../components/Layout';
+import { url } from '../config';
+import '../styles/signUp.scss';
 
 export const SignUp = () => {
   const navigate = useNavigate();
@@ -43,28 +44,31 @@ export const SignUp = () => {
   };
   return (
     <div>
-      <Header />
-      <main className="signup">
-        <h2>新規作成</h2>
-        <p className="error-message">{errorMessage}</p>
-        <form className="signup-form">
-          <label>メールアドレス</label>
-          <br />
-          <input type="email" onChange={handleEmailChange} className="email-input" />
-          <br />
-          <label>ユーザ名</label>
-          <br />
-          <input type="text" onChange={handleNameChange} className="name-input" />
-          <br />
-          <label>パスワード</label>
-          <br />
-          <input type="password" onChange={handlePasswordChange} className="password-input" />
-          <br />
-          <button type="button" onClick={onSignUp} className="signup-button">
-            作成
-          </button>
-        </form>
-      </main>
+      <Layout>
+        <Inner>
+          <main className="signup">
+            <h2>新規作成</h2>
+            <p className="error-message">{errorMessage}</p>
+            <form className="signup-form">
+              <label>メールアドレス</label>
+              <br />
+              <input type="email" onChange={handleEmailChange} className="email-input" />
+              <br />
+              <label>ユーザ名</label>
+              <br />
+              <input type="text" onChange={handleNameChange} className="name-input" />
+              <br />
+              <label>パスワード</label>
+              <br />
+              <input type="password" onChange={handlePasswordChange} className="password-input" />
+              <br />
+              <button type="button" onClick={onSignUp} className="signup-button">
+                作成
+              </button>
+            </form>
+          </main>
+        </Inner>
+      </Layout>
     </div>
   );
 };
