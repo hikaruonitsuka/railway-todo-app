@@ -5,7 +5,6 @@ import axios from 'axios';
 import Inner from '../components/Inner';
 import Layout from '../components/Layout';
 import { url } from '../config';
-import '../styles/newList.scss';
 
 export const NewList = () => {
   const [cookies] = useCookies();
@@ -35,20 +34,26 @@ export const NewList = () => {
   return (
     <Layout>
       <Inner>
-        <div>
-          <main className="new-list">
-            <h2>リスト新規作成</h2>
-            <p className="error-message">{errorMessage}</p>
-            <form className="new-list-form">
-              <label>タイトル</label>
-              <br />
-              <input type="text" onChange={handleTitleChange} className="new-list-title" />
-              <br />
-              <button type="button" onClick={onCreateList} className="new-list-button">
+        <div className="container">
+          <h2>リスト新規作成</h2>
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
+          <form className="form-container">
+            <div className="form-item-container">
+              <div className="form-item">
+                <label className="form-label" htmlFor="title">
+                  タイトル
+                </label>
+                <div className="form-input">
+                  <input id="title" type="text" onChange={handleTitleChange} />
+                </div>
+              </div>
+            </div>
+            <div className="form-button-container">
+              <button className="form-button" type="button" onClick={onCreateList}>
                 作成
               </button>
-            </form>
-          </main>
+            </div>
+          </form>
         </div>
       </Inner>
     </Layout>

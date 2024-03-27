@@ -2,14 +2,20 @@
 
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
   padding: 16px;
+  color: #fff;
   background-color: #242f9b;
-  color: #ffffff;
+}
+
+.header-title {
+  @media screen and (width <= 576px) {
+    font-size: 24px;
+  }
 }
 
 .sign-out-button {
-  color: #ffffff;
+  color: #fff;
 }

@@ -1,82 +1,169 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  row-gap: 32px;
+}
+
 .home-container {
   display: flex;
   flex-direction: column;
-  row-gap: 64px;
+  row-gap: 80px;
 }
 
-.list-container {
+.home-item-container {
+  display: flex;
+  flex-direction: column;
+  row-gap: 24px;
+
+  @media screen and (width <= 576px) {
+    row-gap: 40px;
+  }
+}
+
+.home-header {
+  display: flex;
+  column-gap: 24px;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  @media screen and (width <= 576px) {
+    flex-direction: column;
+    row-gap: 8px;
+  }
+}
+
+.home-list-menu {
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
+  text-align: right;
+  list-style-type: none;
+
+  @media screen and (width <= 576px) {
+    flex-direction: row;
+    column-gap: 32px;
+    text-align: revert;
+  }
+}
+
+.list-tab-container {
+  overflow-x: auto;
+}
+
+.list-tab {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 16px;
+  list-style: none;
+
+  &.-overflow {
+    min-width: 800px;
+  }
+}
+
+.list-tab-item {
+  min-width: 180px;
+
+  @media screen and (width <= 576px) {
+    min-width: 140px;
+  }
+}
+
+.list-tab-button {
+  width: 100%;
+  min-height: 100%;
+  padding: 12px 24px;
+  font-weight: bold;
+  color: #242f9b;
+  border: solid 2px #242f9b;
+  border-radius: 4px;
+
+  @media screen and (width <= 576px) {
+    padding: 8px 16px;
+  }
+
+  & > span {
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 8px rgb(0 0 0 / 50%);
+  }
+
+  &.active {
+    color: #fff;
+    background-color: #242f9b;
+  }
+}
+
+.tasks-container {
   display: flex;
   flex-direction: column;
   row-gap: 16px;
 }
 
-.list-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.list-menu {
-  text-align: right;
-}
-
-.list-tab {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(5, minmax(100px, 1fr));
-  column-gap: 16px;
-  row-gap: 16px;
-  overflow-x: auto;
-}
-
-.list-tab-item {
-  display: block;
-  width: 100%;
-  padding: 8px 24px;
-  border: solid 1px #242f9b;
-}
-
-.active {
-  background-color: #242f9b;
-  color: #ffffff;
+.tasks-select {
+  max-width: 100px;
 }
 
 .tasks-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
 .task-list {
-  display: flex;
-  flex-direction: column;
-  row-gap: 8px;
-}
-
-.task-item {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(316px, 1fr));
+  gap: 24px;
   list-style-type: none;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  padding: 8px;
+
+  @media screen and (width <= 576px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .task-item-link {
   display: flex;
   flex-direction: column;
+  row-gap: 16px;
+  justify-content: space-between;
+  min-height: 100%;
+  padding: 16px;
+  color: #000;
   text-decoration: none;
-  color: #000000;
-  align-items: center;
-  column-gap: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+}
+
+.task-item-upper {
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
+}
+
+.task-item-lower {
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
+  line-height: 1.3;
 }
 
 .task-item-label {
+  align-self: flex-start;
+  min-width: 44px;
+  padding: 4px;
   font-size: 0.75em;
   font-weight: bold;
-  color: #ffffff;
-  background-color: #000000;
-  border-radius: 8px;
-  padding: 4px;
   line-height: 1;
+  color: #fff;
+  text-align: center;
+  background-color: #000;
+  border-radius: 8px;
 
   &.-done {
     background-color: #15803d;
@@ -84,24 +171,16 @@
 }
 
 .task-item-title {
+  display: -webkit-box;
+  overflow: hidden;
   font-weight: bold;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .task-item-limit,
 .task-item-remaining-time {
   justify-self: flex-end;
   font-size: 0.85em;
-}
-
-.error-message {
-  color: #ff3333;
-}
-
-.display-select-wrapper {
-  width: 100px;
-  margin: 0 0 25px auto;
-}
-
-.display-select {
-  width: 100%;
 }

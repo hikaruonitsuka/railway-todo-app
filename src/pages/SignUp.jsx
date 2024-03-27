@@ -46,27 +46,45 @@ export const SignUp = () => {
     <div>
       <Layout>
         <Inner>
-          <main className="signup">
-            <h2>新規作成</h2>
-            <p className="error-message">{errorMessage}</p>
-            <form className="signup-form">
-              <label>メールアドレス</label>
-              <br />
-              <input type="email" onChange={handleEmailChange} className="email-input" />
-              <br />
-              <label>ユーザ名</label>
-              <br />
-              <input type="text" onChange={handleNameChange} className="name-input" />
-              <br />
-              <label>パスワード</label>
-              <br />
-              <input type="password" onChange={handlePasswordChange} className="password-input" />
-              <br />
-              <button type="button" onClick={onSignUp} className="signup-button">
-                作成
-              </button>
+          <section className="signup">
+            <div className="signup-heading">
+              <h2>新規作成</h2>
+              {errorMessage && <p className="error-message">{errorMessage}</p>}
+            </div>
+            <form className="form-container">
+              <div className="form-item-container">
+                <div className="form-item">
+                  <label className="form-label" htmlFor="email">
+                    メールアドレス
+                  </label>
+                  <div className="form-input">
+                    <input id="email" type="email" onChange={handleEmailChange} autoComplete="email" />
+                  </div>
+                </div>
+                <div className="form-item">
+                  <label className="form-label" htmlFor="username">
+                    ユーザ名
+                  </label>
+                  <div className="form-input">
+                    <input id="username" type="text" onChange={handleNameChange} autoComplete="username" />
+                  </div>
+                </div>
+                <div className="form-item">
+                  <label className="form-label" htmlFor="password">
+                    パスワード
+                  </label>
+                  <div className="form-input">
+                    <input id="password" type="password" onChange={handlePasswordChange} autoComplete="new-password" />
+                  </div>
+                </div>
+              </div>
+              <div className="form-button-container">
+                <button className="form-button" type="button" onClick={onSignUp}>
+                  作成
+                </button>
+              </div>
             </form>
-          </main>
+          </section>
         </Inner>
       </Layout>
     </div>

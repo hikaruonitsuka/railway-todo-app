@@ -6,7 +6,6 @@ import Inner from '../components/Inner';
 import Layout from '../components/Layout';
 import { url } from '../config';
 import { extractDateTime } from '../utils/extractDateTime';
-import '../styles/newTask.scss';
 
 export const NewTask = () => {
   const [cookies] = useCookies();
@@ -83,39 +82,55 @@ export const NewTask = () => {
   return (
     <Layout>
       <Inner>
-        <div>
-          <main className="new-task">
-            <h2>タスク新規作成</h2>
-            <p className="error-message">{errorMessage}</p>
-            <form className="new-task-form">
-              <label>リスト</label>
-              <br />
-              <select onChange={(e) => handleSelectList(e.target.value)} className="new-task-select-list">
-                {lists.map((list, key) => (
-                  <option key={key} className="list-item" value={list.id}>
-                    {list.title}
-                  </option>
-                ))}
-              </select>
-              <br />
-              <label>タイトル</label>
-              <br />
-              <input type="text" onChange={handleTitleChange} className="new-task-title" />
-              <br />
-              <label>詳細</label>
-              <br />
-              <textarea type="text" onChange={handleDetailChange} className="new-task-detail" />
-              <br />
-              <label>期限</label>
-              <div className="new-task-datetime-input">
-                <input type="date" onChange={handleDateChange} />
-                <input type="time" onChange={handleTimeChange} />
+        <div className="container new-task-container">
+          <h2>タスク新規作成</h2>
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
+          <form className="form-container">
+            <div className="form-item-container">
+              <div className="form-item">
+                <label className="form-label" htmlFor="list">
+                  リスト
+                </label>
+                <select id="list" className="form-select" onChange={(e) => handleSelectList(e.target.value)}>
+                  {lists.map((list, key) => (
+                    <option key={key} className="list-item" value={list.id}>
+                      {list.title}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <button type="button" className="new-task-button" onClick={onCreateTask}>
+              <div className="form-item">
+                <label className="form-label" htmlFor="title">
+                  タイトル
+                </label>
+                <div className="form-input">
+                  <input id="title" type="text" onChange={handleTitleChange} />
+                </div>
+              </div>
+              <div className="form-item">
+                <label className="form-label" htmlFor="detail">
+                  詳細
+                </label>
+                <div className="form-input">
+                  <textarea id="detail" type="text" onChange={handleDetailChange} />
+                </div>
+              </div>
+              <div className="form-item">
+                <label className="form-label" htmlFor="limit">
+                  期限
+                </label>
+                <div className="form-date-container">
+                  <input id="limit" type="date" onChange={handleDateChange} />
+                  <input type="time" onChange={handleTimeChange} />
+                </div>
+              </div>
+            </div>
+            <div className="form-button-container">
+              <button type="button" className="form-button" onClick={onCreateTask}>
                 作成
               </button>
-            </form>
-          </main>
+            </div>
+          </form>
         </div>
       </Inner>
     </Layout>

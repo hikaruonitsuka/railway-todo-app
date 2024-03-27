@@ -5,7 +5,6 @@ import axios from 'axios';
 import Inner from '../components/Inner';
 import Layout from '../components/Layout';
 import { url } from '../config';
-import '../styles/editList.scss';
 
 export const EditList = () => {
   const navigate = useNavigate();
@@ -67,24 +66,30 @@ export const EditList = () => {
   return (
     <Layout>
       <Inner>
-        <div>
-          <main className="edit-list">
-            <h2>リスト編集</h2>
-            <p className="error-message">{errorMessage}</p>
-            <form className="edit-list-form">
-              <label>タイトル</label>
-              <br />
-              <input type="text" className="edit-list-title" value={title} onChange={handleTitleChange} />
-              <br />
-              <button type="button" className="delete-list-button" onClick={onDeleteList}>
-                削除
-              </button>
-              <button type="button" className="edit-list-button" onClick={onUpdateList}>
+        <section className="container">
+          <h2>リスト編集</h2>
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
+          <form className="form-container">
+            <div className="form-item-container">
+              <div className="form-item">
+                <label className="form-label" htmlFor="title">
+                  タイトル
+                </label>
+                <div className="form-input">
+                  <input id="title" type="text" value={title} onChange={handleTitleChange} />
+                </div>
+              </div>
+            </div>
+            <div className="form-button-container -row">
+              <button className="form-button" type="button" onClick={onUpdateList}>
                 更新
               </button>
-            </form>
-          </main>
-        </div>
+              <button className="form-button -delete" type="button" onClick={onDeleteList}>
+                削除
+              </button>
+            </div>
+          </form>
+        </section>
       </Inner>
     </Layout>
   );

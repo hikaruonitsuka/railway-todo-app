@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { store } from './store';
+import './styles/common.scss';
 import './styles/index.scss';
 
 const container = document.getElementById('root');

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import PropTypes from 'prop-types';
 import Inner from '../components/Inner';
 import Layout from '../components/Layout';
+import TaskList from '../components/TaskList';
 import { url } from '../config';
 import '../styles/home.scss';
 
@@ -12,7 +12,7 @@ export const Home = () => {
   const [isDoneDisplay, setIsDoneDisplay] = useState('todo'); // todo->未完了 done->完了
   const [lists, setLists] = useState([]);
   const [selectListId, setSelectListId] = useState();
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [cookies] = useCookies();
   const handleIsDoneDisplayChange = (e) => setIsDoneDisplay(e.target.value);
@@ -69,145 +69,61 @@ export const Home = () => {
   return (
     <Layout>
       <Inner>
-        <div>
+        <div className="home">
           {errorMessage && <p className="error-message">{errorMessage}</p>}
           <div className="home-container">
-            <div className="list-container">
-              <div className="list-header">
+            <div className="home-item-container">
+              <div className="home-header">
                 <h2>リスト一覧</h2>
-                <div className="list-menu">
-                  <p>
+                <ul className="home-list-menu">
+                  <li>
                     <Link to="/list/new">リスト新規作成</Link>
-                  </p>
-                  <p>
+                  </li>
+                  <li>
                     <Link to={`/lists/${selectListId}/edit`}>選択中のリストを編集</Link>
-                  </p>
-                </div>
+                  </li>
+                </ul>
               </div>
               {lists.length > 0 && (
-                <ul className="list-tab" role="tablist">
-                  {lists.map((list, key) => {
-                    const isActive = list.id === selectListId;
-                    return (
-                      <li key={key} role="presentation">
-                        <button
-                          role="tab"
-                          aria-selected={isActive ? 'true' : 'false'}
-                          className={`list-tab-item hover ${isActive ? 'active' : ''}`}
-                          onClick={() => handleSelectList(list.id)}
-                        >
-                          {list.title}
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
+                <div className="list-tab-container">
+                  <ul className={`list-tab${lists.length > 3 ? ' -overflow' : ''}`} role="tablist">
+                    {lists.map((list, key) => {
+                      const isActive = list.id === selectListId;
+                      return (
+                        <li className="list-tab-item" key={key} role="presentation">
+                          <button
+                            role="tab"
+                            aria-selected={isActive ? 'true' : 'false'}
+                            className={`list-tab-button hover ${isActive ? 'active' : ''}`}
+                            onClick={() => handleSelectList(list.id)}
+                          >
+                            <span>{list.title}</span>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
               )}
             </div>
-            <div className="task-container">
-              <div className="tasks-header">
+            <div className="home-item-container">
+              <div className="home-header">
                 <h2>タスク一覧</h2>
                 <Link to="/task/new">タスク新規作成</Link>
               </div>
-              <div className="display-select-wrapper">
-                <select onChange={handleIsDoneDisplayChange} className="display-select">
-                  <option value="todo">未完了</option>
-                  <option value="done">完了</option>
-                </select>
-              </div>
-              <Tasks tasks={tasks} selectListId={selectListId} isDoneDisplay={isDoneDisplay} />
+              {tasks && (
+                <div className="tasks-container">
+                  <select className="tasks-select form-select" onChange={handleIsDoneDisplayChange}>
+                    <option value="todo">未完了</option>
+                    <option value="done">完了</option>
+                  </select>
+                  <TaskList tasks={tasks} selectListId={selectListId} isDoneDisplay={isDoneDisplay} />
+                </div>
+              )}
             </div>
           </div>
         </div>
       </Inner>
     </Layout>
   );
-};
-
-// 表示するタスク
-const Tasks = (props) => {
-  const { selectListId, isDoneDisplay } = props;
-
-  if (props.tasks === null) return <></>;
-
-  // 現在の日時を取得
-  const nowDate = new Date();
-
-  // 日時変換
-  const tasks = props.tasks.map((task) => {
-    // 現時刻とタスクに設定された日時を比較して残り時間を表示する
-    const taskDate = new Date(task.limit);
-
-    // 残り時間をミリ秒で計算
-    const remainingMs = taskDate - nowDate;
-
-    // 残り時間が0以下の場合は「期限切れ」とする
-    if (remainingMs <= 0) {
-      return {
-        ...task,
-        limit: taskDate.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }),
-        remainingTime: '期限切れ',
-      };
-    }
-
-    // 残り時間を日、時間、分、秒に変換
-    const remainingDays = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
-    const remainingHours = Math.floor((remainingMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const remainingMinutes = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
-    const remainingSeconds = Math.floor((remainingMs % (1000 * 60)) / 1000);
-
-    // 残り時間を文字列で設定
-    const remainingTimeStr = `${remainingDays}日${remainingHours}時間${remainingMinutes}分${remainingSeconds}秒`;
-    return {
-      ...task,
-      limit: taskDate.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }),
-      remainingTime: remainingTimeStr,
-    };
-  });
-
-  if (isDoneDisplay == 'done') {
-    return (
-      <ul>
-        {tasks
-          .filter((task) => {
-            return task.done === true;
-          })
-          .map((task, key) => (
-            <li key={key} className="task-item">
-              <Link to={`/lists/${selectListId}/tasks/${task.id}`} className="task-item-link hover">
-                <span className="task-item-label -done">{task.done ? '完了' : '未完了'}</span>
-                <span className="task-item-title">{task.title}</span>
-                <span className="task-item-limit">期限:{task.limit}</span>
-                <span className="task-item-remaining-time">{task.remainingTime}</span>
-              </Link>
-            </li>
-          ))}
-      </ul>
-    );
-  }
-
-  return (
-    <ul className="task-list">
-      {tasks
-        .filter((task) => {
-          return task.done === false;
-        })
-        .map((task, key) => (
-          <li key={key} className="task-item">
-            <Link to={`/lists/${selectListId}/tasks/${task.id}`} className="task-item-link hover">
-              <span className="task-item-label">{task.done ? '完了' : '未完了'}</span>
-              <span className="task-item-title">{task.title}</span>
-              <span className="task-item-limit">期限:{task.limit}</span>
-              <span className="task-item-remaining-time">期限まで残り {task.remainingTime}</span>
-            </Link>
-          </li>
-        ))}
-    </ul>
-  );
-};
-
-Tasks.propTypes = {
-  tasks: PropTypes.array,
-  selectListId: PropTypes.string,
-  isDoneDisplay: PropTypes.oneOf(['todo', 'done']).isRequired,
 };
