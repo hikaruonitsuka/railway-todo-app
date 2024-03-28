@@ -70,7 +70,9 @@ export const SignIn = () => {
               <button className="form-button hover" type="button" onClick={onSignIn}>
                 サインイン
               </button>
-              <Link to="/signup" aria-label="アカウントを新規作成">新規作成</Link>
+              <Link to="/signup" aria-label="アカウントを新規作成">
+                新規作成
+              </Link>
             </div>
           </form>
         </section>
