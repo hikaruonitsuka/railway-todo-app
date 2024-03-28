@@ -27,13 +27,16 @@ export const NewTask = () => {
 
   // タスク作成処理
   const onCreateTask = () => {
-    // 指定されているかどうかを分岐
+    // 年月日指定なしの場合、現在時刻を代入しておく
     let dateObject = new Date();
+
+		// 年月日だけの指定の場合
     if (date) {
       const { year, month, day } = extractDateTime(date);
       dateObject = new Date(year, month, day);
     }
 
+		// 両方指定されている場合
     if (date && time) {
       const { year, month, day, hour, minute } = extractDateTime(date, time);
       dateObject = new Date(year, month, day, hour, minute);
