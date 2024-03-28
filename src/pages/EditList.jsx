@@ -8,11 +8,13 @@ import { url } from '../config';
 
 export const EditList = () => {
   const navigate = useNavigate();
+  const [cookies] = useCookies();
   const { listId } = useParams();
   const [title, setTitle] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [cookies] = useCookies();
   const handleTitleChange = (e) => setTitle(e.target.value);
+
+	// リストの更新
   const onUpdateList = () => {
     const data = {
       title: title,
@@ -32,6 +34,7 @@ export const EditList = () => {
       });
   };
 
+	// リストの削除
   const onDeleteList = () => {
     axios
       .delete(`${url}/lists/${listId}`, {
@@ -47,6 +50,7 @@ export const EditList = () => {
       });
   };
 
+	// リストの取得
   useEffect(() => {
     axios
       .get(`${url}/lists/${listId}`, {

@@ -11,17 +11,22 @@ import '../styles/signUp.scss';
 
 export const SignUp = () => {
   const navigate = useNavigate();
-  const auth = useSelector((state) => state.auth.isSignIn);
+  const auth = useSelector((state) => state.auth.isSignIn); // Reduxを利用してサインインしているかどうかを真偽値として取得
   const dispatch = useDispatch();
+  const [errorMessage, setErrorMessage] = useState();
+  const [, setCookie] = useCookies();
+
+  // 入力内容の状態管理
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessge] = useState();
-  const [, setCookie] = useCookies();
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handleNameChange = (e) => setName(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
+
+  // 新規登録処理
   const onSignUp = () => {
+    // 入力された情報をdataオブジェクトに保管
     const data = {
       email: email,
       name: name,
@@ -33,13 +38,14 @@ export const SignUp = () => {
       .then((res) => {
         const token = res.data.token;
         dispatch(signIn());
-        setCookie('token', token);
+        setCookie('token', token); // cookieに保存
         navigate('/');
       })
       .catch((err) => {
-        setErrorMessge(`サインアップに失敗しました。 ${err}`);
+        setErrorMessage(`サインアップに失敗しました。 ${err}`);
       });
 
+    // 認証済みの場合リダイレクト
     if (auth) return <Navigate to="/" />;
   };
   return (

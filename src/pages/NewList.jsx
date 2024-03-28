@@ -9,10 +9,13 @@ import { url } from '../config';
 export const NewList = () => {
   const [cookies] = useCookies();
   const navigate = useNavigate();
+
   const [title, setTitle] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const handleTitleChange = (e) => setTitle(e.target.value);
-  const onCreateList = () => {
+
+	// リストの作成
+	const onCreateList = () => {
     const data = {
       title: title,
     };

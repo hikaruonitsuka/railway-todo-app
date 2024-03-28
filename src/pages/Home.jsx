@@ -9,14 +9,16 @@ import { url } from '../config';
 import '../styles/home.scss';
 
 export const Home = () => {
-  const [isDoneDisplay, setIsDoneDisplay] = useState('todo'); // todo->未完了 done->完了
   const [lists, setLists] = useState([]);
+  const [isDoneDisplay, setIsDoneDisplay] = useState('todo'); // todo->未完了 done->完了
   const [selectListId, setSelectListId] = useState();
   const [tasks, setTasks] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
-  const [cookies] = useCookies();
+  const [cookies] = useCookies(); // cookie取得
   const handleIsDoneDisplayChange = (e) => setIsDoneDisplay(e.target.value);
-  useEffect(() => {
+
+	// リストの取得
+	useEffect(() => {
     axios
       .get(`${url}/lists`, {
         headers: {
@@ -31,10 +33,14 @@ export const Home = () => {
       });
   }, []);
 
+	// タスクの取得
   useEffect(() => {
+		// リストが存在するかどうかをチェック
     const listId = lists[0]?.id;
     if (typeof listId !== 'undefined') {
+			// 選択されたリストのIDをセット
       setSelectListId(listId);
+			// リストIDと一致するタスクを取得
       axios
         .get(`${url}/lists/${listId}/tasks`, {
           headers: {
@@ -50,6 +56,7 @@ export const Home = () => {
     }
   }, [lists]);
 
+	// リストの切り替え
   const handleSelectList = (id) => {
     setSelectListId(id);
     axios
@@ -106,21 +113,23 @@ export const Home = () => {
                 </div>
               )}
             </div>
-            <div className="home-item-container">
-              <div className="home-header">
-                <h2>タスク一覧</h2>
-                <Link to="/task/new">タスク新規作成</Link>
-              </div>
-              {tasks && (
-                <div className="tasks-container">
-                  <select className="tasks-select form-select" onChange={handleIsDoneDisplayChange}>
-                    <option value="todo">未完了</option>
-                    <option value="done">完了</option>
-                  </select>
-                  <TaskList tasks={tasks} selectListId={selectListId} isDoneDisplay={isDoneDisplay} />
+            {lists.length > 0 && (
+              <div className="home-item-container">
+                <div className="home-header">
+                  <h2>タスク一覧</h2>
+                  <Link to="/task/new">タスク新規作成</Link>
                 </div>
-              )}
-            </div>
+                {tasks && (
+                  <div className="tasks-container">
+                    <select className="tasks-select form-select" onChange={handleIsDoneDisplayChange}>
+                      <option value="todo">未完了</option>
+                      <option value="done">完了</option>
+                    </select>
+                    <TaskList tasks={tasks} selectListId={selectListId} isDoneDisplay={isDoneDisplay} />
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </Inner>

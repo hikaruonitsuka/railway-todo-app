@@ -13,12 +13,15 @@ export const SignIn = () => {
   const auth = useSelector((state) => state.auth.isSignIn);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [, setCookie] = useCookies();
+  const [errorMessage, setErrorMessage] = useState();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState();
-  const [, setCookie] = useCookies();
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
+
+  // サインイン処理
   const onSignIn = () => {
     axios
       .post(`${url}/signin`, { email: email, password: password })

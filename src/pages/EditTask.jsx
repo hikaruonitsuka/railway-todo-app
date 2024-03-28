@@ -14,15 +14,13 @@ export const EditTask = () => {
   const { listId, taskId } = useParams();
   const [cookies] = useCookies();
 
-  // state
+	// フォームの状態管理
   const [title, setTitle] = useState('');
   const [detail, setDetail] = useState('');
   const [isDone, setIsDone] = useState();
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
-  // イベントハンドラ
   const handleTitleChange = (e) => setTitle(e.target.value);
   const handleDetailChange = (e) => setDetail(e.target.value);
   const handleIsDoneChange = (e) => setIsDone(e.target.value === 'done');

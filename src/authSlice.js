@@ -4,9 +4,10 @@ import { createSlice } from '@reduxjs/toolkit';
 const cookie = new Cookies();
 
 const initialState = {
-  isSignIn: cookie.get('token') !== undefined,
+  isSignIn: cookie.get('token') !== undefined, // cookieにtokenが存在するかどうかを判定
 };
 
+// 認証状態の更新関数
 export const authSlice = createSlice({
   name: 'auth',
   initialState,

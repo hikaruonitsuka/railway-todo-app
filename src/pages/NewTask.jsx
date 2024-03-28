@@ -11,16 +11,14 @@ export const NewTask = () => {
   const [cookies] = useCookies();
   const navigate = useNavigate();
   const [selectListId, setSelectListId] = useState();
-
-  // States
   const [lists, setLists] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // フォームの状態管理
   const [title, setTitle] = useState('');
   const [detail, setDetail] = useState('');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-
-  // イベントハンドラ
   const handleTitleChange = (e) => setTitle(e.target.value);
   const handleDetailChange = (e) => setDetail(e.target.value);
   const handleSelectList = (id) => setSelectListId(id);
